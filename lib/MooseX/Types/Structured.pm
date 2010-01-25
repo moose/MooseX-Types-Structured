@@ -22,7 +22,7 @@ MooseX::Types::Structured - Structured Type Constraints for Moose
 The following is example usage for this module.
 
     package Person;
-	
+
     use Moose;
     use MooseX::Types::Moose qw(Str Int HashRef);
     use MooseX::Types::Structured qw(Dict Tuple Optional);
@@ -35,7 +35,7 @@ The following is example usage for this module.
             middle => Optional[Str],
         ],
     );
-    
+
     ## description is a string field followed by a HashRef of tagged data.
     has description => (
       isa=>Tuple[
@@ -76,30 +76,30 @@ But all of these would cause a constraint error for the 'name' attribute:
 
     ## Value for 'name' not a HashRef
     Person->new( name => 'John' );
-    
+
     ## Value for 'name' has incorrect hash key and missing required keys
     Person->new( name => {
         first_name => 'John'
     });
-    
+
     ## Also incorrect keys
     Person->new( name => {
         first_name => 'John',
         age => 39,
     });
-    
+
     ## key 'middle' incorrect type, should be a Str not a ArrayRef
     Person->new( name => {
         first => 'Vanessa',
         middle => [1,2],
         last => 'Li',
-    }); 
+    });
 
 And these would cause a constraint error for the 'description' attribute:
 
     ## Should be an ArrayRef
     Person->new( description => 'Hello I am a String' );
-    
+
     ## First element must be a string not a HashRef.
     Person->new (description => [{
         tag1 => 'value1',
@@ -117,7 +117,7 @@ generalized form is:
 
     TypeConstraint[@TypeParameters or %TypeParameters]
 
-Where 'TypeParameters' is an array reference or hash references of 
+Where 'TypeParameters' is an array reference or hash references of
 L<Moose::Meta::TypeConstraint> objects.
 
 This type library enables structured type constraints. It is built on top of the
@@ -140,7 +140,7 @@ other hand, a structured type constraint explicitly names all it's allowed
 
     subtype StringFollowedByInt,
      as Tuple[Str,Int];
-	
+
 would constrain it's value to things like ['hello', 111] but ['hello', 'world']
 would fail, as well as ['hello', 111, 'world'] and so on.  Here's another
 example:
@@ -156,20 +156,20 @@ example:
         Str, Int,
         Optional[HashRef]
      ];
-     
+
 This defines a type constraint that validates values like:
 
     ['Hello', 100, {key1 => 'value1', key2 => 'value2'}];
     ['World', 200];
-    
+
 Notice that the last type constraint in the structure is optional.  This is
 enabled via the helper Optional type constraint, which is a variation of the
 core Moose type constraint 'Maybe'.  The main difference is that Optional type
-constraints are required to validate if they exist, while 'Maybe' permits 
+constraints are required to validate if they exist, while 'Maybe' permits
 undefined values.  So the following example would not validate:
 
     StringIntOptionalHashRef->validate(['Hello Undefined', 1000, undef]);
-    
+
 Please note the subtle difference between undefined and null.  If you wish to
 allow both null and undefined, you should use the core Moose 'Maybe' type
 constraint instead:
@@ -188,7 +188,7 @@ constraint instead:
 This would validate the following:
 
     ['Hello', 100, {key1 => 'value1', key2 => 'value2'}];
-    ['World', 200, undef];    
+    ['World', 200, undef];
     ['World', 200];
 
 Structured constraints are not limited to arrays.  You can define a structure
@@ -203,17 +203,17 @@ against a HashRef with the 'Dict' type constaint as in this example:
 This would constrain a HashRef that validates something like:
 
     {firstname => 'Christopher', lastname => 'Parsons'};
-    
+
 but all the following would fail validation:
 
     ## Incorrect keys
     {first => 'Christopher', last => 'Parsons'};
-    
+
     ## Too many keys
     {firstname => 'Christopher', lastname => 'Parsons', middlename => 'Allen'};
-    
+
     ## Not a HashRef
-    ['Christopher', 'Parsons']; 
+    ['Christopher', 'Parsons'];
 
 These structures can be as simple or elaborate as you wish.  You can even
 combine various structured, parameterized and simple constraints all together:
@@ -224,13 +224,13 @@ combine various structured, parameterized and simple constraints all together:
         Dict[name=>Str, age=>Int],
         ArrayRef[Int]
      ];
-	
+
 Which would match:
 
 	[1, {name=>'John', age=>25},[10,11,12]];
 
 Please notice how the type parameters can be visually arranged to your liking
-and to improve the clarity of your meaning.  You don't need to run then 
+and to improve the clarity of your meaning.  You don't need to run then
 altogether onto a single line.  Additionally, since the 'Dict' type constraint
 defines a hash constraint, the key order is not meaningful.  For example:
 
@@ -256,34 +256,34 @@ example:
 
     package MyApp::MyStruct;
     use Moose;
-    
+
     ## lazy way to make a bunch of attributes
     has $_ for qw(full_name age_in_years);
-    
+
     package MyApp::MyClass;
     use Moose;
-    
-    has person => (isa => 'MyApp::MyStruct');		
-    
+
+    has person => (isa => 'MyApp::MyStruct');
+
     my $instance = MyApp::MyClass->new(
         person=>MyApp::MyStruct->new(
             full_name => 'John',
             age_in_years => 39,
         ),
     );
-	
+
 This method may take some additional time to setup but will give you more
 flexibility.  However, structured constraints are highly compatible with this
 method, granting some interesting possibilities for coercion.  Try:
 
     package MyApp::MyClass;
-    
+
     use Moose;
     use MyApp::MyStruct;
-    
+
     ## It's recommended your type declarations live in a separate class in order
     ## to promote reusability and clarity.  Inlined here for brevity.
-    
+
     use MooseX::Types::DateTime qw(DateTime);
     use MooseX::Types -declare [qw(MyStruct)];
     use MooseX::Types::Moose qw(Str Int);
@@ -296,7 +296,7 @@ method, granting some interesting possibilities for coercion.  Try:
     ## Just a shorter version really.
     subtype MyStruct,
      as 'MyApp::MyStruct';
-    
+
     ## Add the coercions.
     coerce MyStruct,
      from Dict[
@@ -312,22 +312,22 @@ method, granting some interesting possibilities for coercion.  Try:
      ], via {
         my $name = $_->{firstname} .' '. $_->{lastname};
         my $age = DateTime->now - $_->{dob};
-        
+
         MyApp::MyStruct->new(
             full_name=>$name,
             age_in_years=>$age->years,
         );
      };
-     
-    has person => (isa=>MyStruct);	
-     
+
+    has person => (isa=>MyStruct);
+
 This would allow you to instantiate with something like:
 
     my $obj = MyApp::MyClass->new( person => {
         full_name=>'John Napiorkowski',
         age_in_years=>39,
     });
-    
+
 Or even:
 
     my $obj = MyApp::MyClass->new( person => {
@@ -347,13 +347,13 @@ this example:
 
     subtype Person,
      as Dict[name => Str];
-	 
+
     subtype FriendlyPerson,
      as Person[
         name => Str,
         total_friends => Int,
      ];
-	 
+
 This will actually work BUT you have to take care that the subtype has a
 structure that does not contradict the structure of it's parent.  For now the
 above works, but I will clarify the syntax for this at a future point, so
@@ -371,13 +371,13 @@ Coercions currently work for 'one level' deep.  That is you can do:
         name => Str,
         age => Int
     ];
-    
+
     subtype Fullname,
      as Dict[
         first => Str,
         last => Str
      ];
-    
+
     coerce Person,
      ## Coerce an object of a particular class
      from BlessedPersonObject, via {
@@ -386,7 +386,7 @@ Coercions currently work for 'one level' deep.  That is you can do:
             age=>$_->age,
         };
      },
-     
+
      ## Coerce from [$name, $age]
      from ArrayRef, via {
         +{
@@ -404,7 +404,7 @@ Coercions currently work for 'one level' deep.  That is you can do:
             age =>$age->years
         }
      };
-	 
+
 And that should just work as expected.  However, if there are any 'inner'
 coercions, such as a coercion on 'Fullname' or on 'DateTime', that coercion
 won't currently get activated.
@@ -426,7 +426,7 @@ example:
 	 		ArrayRef[Person]
 	 	],
 	 ];
-	 
+
 This would declare a Person subtype that contains a name and an optional
 ArrayRef of Persons who are friends as in:
 
@@ -453,7 +453,7 @@ a Union with an non recursive option such as:
 	 	Str,
 	 	Str|Tuple,
 	 ];
-	 
+
 Which validates:
 
 	[
@@ -467,7 +467,7 @@ Which validates:
 		],
 	];
 
-Otherwise you will define a subtype thatis impossible to validate since it is 
+Otherwise you will define a subtype thatis impossible to validate since it is
 infinitely recursive.  For more information about defining recursive types,
 please see the documentation in L<MooseX::Types> and the test cases.
 
@@ -486,7 +486,7 @@ list of contained constraints.  For example:
 The Values of @constraints should ideally be L<MooseX::Types> declared type
 constraints.  We do support 'old style' L<Moose> string based constraints to a
 limited degree but these string type constraints are considered deprecated.
-There will be limited support for bugs resulting from mixing string and 
+There will be limited support for bugs resulting from mixing string and
 L<MooseX::Types> in your structures.  If you encounter such a bug and really
 need it fixed, we will required a detailed test case at the minimum.
 
@@ -497,7 +497,7 @@ hashref.  For example:
 
     Dict[name=>Str, age=>Int]; ## Validates {name=>'John', age=>39}
 
-The keys in %constraints follow the same rules as @constraints in the above 
+The keys in %constraints follow the same rules as @constraints in the above
 section.
 
 =head2 Optional[$constraint]
@@ -514,7 +514,7 @@ or a tuple where some of the values are not required.  For example:
         last=>Str,
         middle=>Optional[Str],
     ];
-        
+
 Creates a constraint that validates against a hashref with the keys 'first' and
 'last' being strings and required while an optional key 'middle' is must be a
 string if it appears but doesn't have to appear.  So in this case both the
@@ -556,7 +556,7 @@ In order to allow structured validation of, "and then some", arguments, you can
 use the L</slurpy> method against a type constraint.  For example:
 
     use MooseX::Types::Structured qw(Tuple slurpy);
-    
+
     subtype AllowTailingArgs,
      as Tuple[
        Int,
@@ -568,7 +568,7 @@ use the L</slurpy> method against a type constraint.  For example:
 This will now work as expected, validating ArrayRef structures such as:
 
     [1,"hello", $obj, 2,3,4,5,6,...]
-    
+
 A few caveats apply.  First, the slurpy type constraint must be the last one in
 the list of type constraint parameters.  Second, the parent type of the slurpy
 type constraint must match that of the containing type constraint.  That means
@@ -612,25 +612,25 @@ constraint and coercions.  This example also shows structured types mixed which
 other MooseX::Types libraries.
 
     package Test::MooseX::Meta::TypeConstraint::Structured::Examples::Normalize;
-    
+
     use Moose;
     use DateTime;
-    
+
     use MooseX::Types::Structured qw(Dict Tuple);
     use MooseX::Types::DateTime qw(DateTime);
     use MooseX::Types::Moose qw(Int Str Object);
     use MooseX::Types -declare => [qw(Name Age Person)];
-     
+
     subtype Person,
      as Dict[
      	name=>Str,
      	age=>Int,
      ];
-    
+
     coerce Person,
      from Dict[
-     	first=>Str, 
-     	last=>Str, 
+     	first=>Str,
+     	last=>Str,
      	years=>Int,
      ], via { +{
         name => "$_->{first} $_->{last}",
@@ -638,9 +638,9 @@ other MooseX::Types libraries.
      }},
      from Dict[
      	fullname=>Dict[
-     		last=>Str, 
+     		last=>Str,
      		first=>Str,
-     	], 
+     	],
      	dob=>DateTime,
      ],
      ## DateTime needs to be inside of single quotes here to disambiguate the
@@ -650,18 +650,18 @@ other MooseX::Types libraries.
         name => "$_->{fullname}{first} $_->{fullname}{last}",
         age => ($_->{dob} - 'DateTime'->now)->years,
      }};
-     
+
     has person => (is=>'rw', isa=>Person, coerce=>1);
-    
+
 And now you can instantiate with all the following:
 
     __PACKAGE__->new(
         person=>{
             name=>'John Napiorkowski',
-            age=>39,            
+            age=>39,
         },
     );
-        
+
     __PACKAGE__->new(
         person=>{
             first=>'John',
@@ -669,7 +669,7 @@ And now you can instantiate with all the following:
             years=>39,
         },
     );
-    
+
     __PACKAGE__->new(
         person=>{
             fullname => {
@@ -680,10 +680,10 @@ And now you can instantiate with all the following:
                 year=>1969,
                 month=>2,
                 day=>13
-            ),            
+            ),
         },
     );
-    
+
 This technique is a way to support various ways to instantiate your class in a
 clean and declarative way.
 
@@ -693,18 +693,18 @@ Moose::Util::TypeConstraints::get_type_constraint_registry->add_type_constraint(
 	MooseX::Meta::TypeConstraint::Structured->new(
 		name => "MooseX::Types::Structured::Tuple" ,
 		parent => find_type_constraint('ArrayRef'),
-		constraint_generator=> sub { 
+		constraint_generator=> sub {
 			## Get the constraints and values to check
             my ($type_constraints, $values) = @_;
 			my @type_constraints = defined $type_constraints ?
              @$type_constraints : ();
-            
+
             my $overflow_handler;
             if($type_constraints[-1] && blessed $type_constraints[-1]
               && $type_constraints[-1]->isa('MooseX::Types::Structured::OverflowHandler')) {
                 $overflow_handler = pop @type_constraints;
             }
-            
+
 			my @values = defined $values ? @$values: ();
 			## Perform the checking
 			while(@type_constraints) {
@@ -715,7 +715,7 @@ Moose::Util::TypeConstraints::get_type_constraint_registry->add_type_constraint(
                         $_[2]->{message} = $type_constraint->get_message($value)
                          if ref $_[2];
 						return;
-					}				
+					}
 				} else {
                     ## Test if the TC supports null values
 					unless($type_constraint->check()) {
@@ -745,22 +745,22 @@ Moose::Util::TypeConstraints::get_type_constraint_registry->add_type_constraint(
 		}
 	)
 );
-	
+
 Moose::Util::TypeConstraints::get_type_constraint_registry->add_type_constraint(
 	MooseX::Meta::TypeConstraint::Structured->new(
 		name => "MooseX::Types::Structured::Dict",
 		parent => find_type_constraint('HashRef'),
-		constraint_generator=> sub { 
+		constraint_generator=> sub {
 			## Get the constraints and values to check
             my ($type_constraints, $values) = @_;
 			my @type_constraints = defined $type_constraints ?
              @$type_constraints : ();
-            
+
             my $overflow_handler;
             if($type_constraints[-1] && blessed $type_constraints[-1]
               && $type_constraints[-1]->isa('MooseX::Types::Structured::OverflowHandler')) {
                 $overflow_handler = pop @type_constraints;
-            } 
+            }
             my (%type_constraints) = @type_constraints;
 			my %values = defined $values ? %$values: ();
 			## Perform the checking
@@ -785,7 +785,7 @@ Moose::Util::TypeConstraints::get_type_constraint_registry->add_type_constraint(
 				}
 			}
 			## Make sure there are no leftovers.
-			if(%values) { 
+			if(%values) {
                 if($overflow_handler) {
                     return $overflow_handler->check(+{%values});
                 } else {
@@ -809,11 +809,11 @@ Moose::Util::TypeConstraints::get_type_constraint_registry->add_type_constraint(
   MooseX::Meta::TypeConstraint::Structured->new(
     name => "MooseX::Types::Structured::Map",
     parent => find_type_constraint('HashRef'),
-    constraint_generator=> sub { 
+    constraint_generator=> sub {
       ## Get the constraints and values to check
       my ($type_constraints, $values) = @_;
       my @constraints = defined $type_constraints ? @$type_constraints : ();
-            
+
       Carp::confess( "too many args for Map type" ) if @constraints > 2;
 
       my ($key_type, $value_type) = @constraints == 2 ? @constraints
@@ -894,7 +894,7 @@ Here's a list of stuff I would be happy to get volunteers helping with:
 	* All POD examples need test cases in t/documentation/*.t
 	* Want to break out the examples section to a separate cookbook style POD.
 	* Want more examples and best practice / usage guidance for authors
-	* Need to clarify deep coercions, 
+	* Need to clarify deep coercions,
 
 =head1 AUTHOR
 
@@ -917,5 +917,5 @@ This program is free software; you can redistribute it and/or modify it under
 the same terms as Perl itself.
 
 =cut
-	
+
 1;
