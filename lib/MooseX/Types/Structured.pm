@@ -132,7 +132,7 @@ have similar functionality, so their syntax is likewise similar. For example,
 you could define a parameterized constraint like:
 
     subtype ArrayOfInts,
-     as Arrayref[Int];
+     as ArrayRef[Int];
 
 which would constrain a value to something like [1,2,3,...] and so on.  On the
 other hand, a structured type constraint explicitly names all it's allowed
