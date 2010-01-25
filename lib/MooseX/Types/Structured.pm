@@ -5,8 +5,8 @@ use 5.008;
 use Moose::Util::TypeConstraints;
 use MooseX::Meta::TypeConstraint::Structured;
 use MooseX::Types::Structured::OverflowHandler;
-use MooseX::Types -declare => [qw(Dict Tuple Optional)];
-use Sub::Exporter -setup => { exports => [ qw(Dict Tuple Optional slurpy) ] };
+use MooseX::Types -declare => [qw(Dict Map Tuple Optional)];
+use Sub::Exporter -setup => [ qw(Dict Map Tuple Optional slurpy) ];
 use Devel::PartialDump;
 use Scalar::Util qw(blessed);
 
@@ -803,6 +803,46 @@ Moose::Util::TypeConstraints::get_type_constraint_registry->add_type_constraint(
 			}
 		},
 	)
+);
+
+Moose::Util::TypeConstraints::get_type_constraint_registry->add_type_constraint(
+  MooseX::Meta::TypeConstraint::Structured->new(
+    name => "MooseX::Types::Structured::Map",
+    parent => find_type_constraint('HashRef'),
+    constraint_generator=> sub { 
+      ## Get the constraints and values to check
+      my ($type_constraints, $values) = @_;
+      my @constraints = defined $type_constraints ? @$type_constraints : ();
+            
+      Carp::confess( "too many args for Map type" ) if @constraints > 2;
+
+      my ($key_type, $value_type) = @constraints == 2 ? @constraints
+                                  : @constraints == 1 ? (undef, @constraints)
+                                  :                     ();
+
+      my %values = defined $values ? %$values: ();
+      ## Perform the checking
+      if ($value_type) {
+        for my $value (values %$values) {
+          unless ($value_type->check($value)) {
+            $_[2]->{message} = $value_type->get_message($value) if ref $_[2];
+            return;
+          }
+        }
+      }
+
+      if ($key_type) {
+        for my $key (keys %$values) {
+          unless ($key_type->check($key)) {
+            $_[2]->{message} = $key_type->get_message($key) if ref $_[2];
+            return;
+          }
+        }
+      }
+
+      return 1;
+    },
+  )
 );
 
 OPTIONAL: {
