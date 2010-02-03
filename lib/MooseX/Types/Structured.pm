@@ -500,6 +500,17 @@ hashref.  For example:
 The keys in %constraints follow the same rules as @constraints in the above
 section.
 
+=head2 Map[ $key_constraint, $value_constraint ]
+
+This defines a HashRef based constraint in which both the keys and values are
+required to meet certain constraints.  For example, to map hostnames to IP
+addresses, you might say:
+
+  Map[ HostName, IPAddress ]
+
+The type constraint would only be met if every key was a valid HostName and
+every value was a valid IPAddress.
+
 =head2 Optional[$constraint]
 
 This is primarily a helper constraint for Dict and Tuple type constraints.  What
