@@ -689,6 +689,32 @@ clean and declarative way.
 
 =cut
 
+my $Optional = Moose::Meta::TypeConstraint::Parameterizable->new(
+    name => 'MooseX::Types::Structured::Optional',
+    package_defined_in => __PACKAGE__,
+    parent => find_type_constraint('Item'),
+    constraint => sub { 1 },
+    constraint_generator => sub {
+        my ($type_parameter, @args) = @_;
+        my $check = $type_parameter->_compiled_type_constraint();
+        return sub {
+            my (@args) = @_;
+            ## Does the arg exist?  Something exists if it's a 'real' value
+            ## or if it is set to undef.
+            if(exists($args[0])) {
+                ## If it exists, we need to validate it
+                $check->($args[0]);
+            } else {
+                ## But it's is okay if the value doesn't exists
+                return 1;
+            }
+        }
+    }
+);
+
+Moose::Util::TypeConstraints::register_type_constraint($Optional);
+Moose::Util::TypeConstraints::add_parameterizable_type($Optional);
+
 Moose::Util::TypeConstraints::get_type_constraint_registry->add_type_constraint(
 	MooseX::Meta::TypeConstraint::Structured->new(
 		name => "MooseX::Types::Structured::Tuple" ,
@@ -718,7 +744,7 @@ Moose::Util::TypeConstraints::get_type_constraint_registry->add_type_constraint(
 					}
 				} else {
                     ## Test if the TC supports null values
-					unless($type_constraint->check()) {
+                    unless ($type_constraint->is_subtype_of($Optional)) {
                         $_[2]->{message} = $type_constraint->get_message('NULL')
                          if ref $_[2];
 						return;
@@ -745,32 +771,6 @@ Moose::Util::TypeConstraints::get_type_constraint_registry->add_type_constraint(
 		}
 	)
 );
-
-my $Optional = Moose::Meta::TypeConstraint::Parameterizable->new(
-    name => 'MooseX::Types::Structured::Optional',
-    package_defined_in => __PACKAGE__,
-    parent => find_type_constraint('Item'),
-    constraint => sub { 1 },
-    constraint_generator => sub {
-        my ($type_parameter, @args) = @_;
-        my $check = $type_parameter->_compiled_type_constraint();
-        return sub {
-            my (@args) = @_;
-            ## Does the arg exist?  Something exists if it's a 'real' value
-            ## or if it is set to undef.
-            if(exists($args[0])) {
-                ## If it exists, we need to validate it
-                $check->($args[0]);
-            } else {
-                ## But it's is okay if the value doesn't exists
-                return 1;
-            }
-        }
-    }
-);
-
-Moose::Util::TypeConstraints::register_type_constraint($Optional);
-Moose::Util::TypeConstraints::add_parameterizable_type($Optional);
 
 Moose::Util::TypeConstraints::get_type_constraint_registry->add_type_constraint(
 	MooseX::Meta::TypeConstraint::Structured->new(
