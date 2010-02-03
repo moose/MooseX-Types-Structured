@@ -4,6 +4,7 @@ use 5.008;
 
 use Moose::Util::TypeConstraints;
 use MooseX::Meta::TypeConstraint::Structured;
+use MooseX::Meta::TypeConstraint::Structured::Optional;
 use MooseX::Types::Structured::OverflowHandler;
 use MooseX::Types -declare => [qw(Dict Tuple Optional)];
 use Sub::Exporter -setup => { exports => [ qw(Dict Tuple Optional slurpy) ] };
@@ -689,7 +690,7 @@ clean and declarative way.
 
 =cut
 
-my $Optional = Moose::Meta::TypeConstraint::Parameterizable->new(
+my $Optional = MooseX::Meta::TypeConstraint::Structured::Optional->new(
     name => 'MooseX::Types::Structured::Optional',
     package_defined_in => __PACKAGE__,
     parent => find_type_constraint('Item'),
