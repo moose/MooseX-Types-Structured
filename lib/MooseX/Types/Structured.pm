@@ -128,7 +128,7 @@ if you are not familiar with it.
 =head2 Comparing Parameterized types to Structured types
 
 Parameterized constraints are built into core Moose and you are probably already
-familar with the type constraints 'HashRef' and 'ArrayRef'.  Structured types
+familiar with the type constraints 'HashRef' and 'ArrayRef'.  Structured types
 have similar functionality, so their syntax is likewise similar. For example,
 you could define a parameterized constraint like:
 
