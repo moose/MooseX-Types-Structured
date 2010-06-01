@@ -68,8 +68,3 @@ ok ( ! $item->is_subtype_of($any),
 
 ok ( ! Item->is_subtype_of($any),
   q[Item is NOT a subtype of $any]);
-
-__END__
-
-
-  
