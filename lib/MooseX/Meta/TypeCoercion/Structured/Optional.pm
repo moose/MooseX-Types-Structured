@@ -3,6 +3,10 @@ package MooseX::Meta::TypeCoercion::Structured::Optional;
 use Moose;
 extends 'Moose::Meta::TypeCoercion';
 
+=method compile_type_coercion
+
+=cut
+
 sub compile_type_coercion {
     my ($self) = @_;
     my $constraint = $self->type_constraint->type_parameter;

@@ -1,7 +1,7 @@
 BEGIN {
-	use strict;
-	use warnings;
-	use Test::More tests=>25;
+    use strict;
+    use warnings;
+    use Test::More tests=>25;
 }
 
 use Moose::Util::TypeConstraints;

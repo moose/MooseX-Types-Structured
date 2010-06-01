@@ -1,22 +1,16 @@
 package MooseX::Types::Structured;
+# ABSTRACT: MooseX::Types::Structured - Structured Type Constraints for Moose
 
 use 5.008;
 
-use Moose::Util::TypeConstraints;
+use Moose::Util::TypeConstraints 1.06;
 use MooseX::Meta::TypeConstraint::Structured;
 use MooseX::Meta::TypeConstraint::Structured::Optional;
 use MooseX::Types::Structured::OverflowHandler;
-use MooseX::Types -declare => [qw(Dict Map Tuple Optional)];
-use Sub::Exporter -setup => [ qw(Dict Map Tuple Optional slurpy) ];
-use Devel::PartialDump;
+use MooseX::Types 0.22 -declare => [qw(Dict Map Tuple Optional)];
+use Sub::Exporter 0.982 -setup => [ qw(Dict Map Tuple Optional slurpy) ];
+use Devel::PartialDump 0.10;
 use Scalar::Util qw(blessed);
-
-our $VERSION = '0.22';
-our $AUTHORITY = 'cpan:JJNAPIORK';
-
-=head1 NAME
-
-MooseX::Types::Structured - Structured Type Constraints for Moose
 
 =head1 SYNOPSIS
 
@@ -45,7 +39,7 @@ The following is example usage for this module.
      ],
     );
 
-	## Remainder of your class attributes and methods
+    ## Remainder of your class attributes and methods
 
 Then you can instantiate this class with something like:
 
@@ -150,7 +144,7 @@ example:
 
     use MooseX::Types -declare [qw(StringIntOptionalHashRef)];
     use MooseX::Types::Moose qw(Str Int);
-	use MooseX::Types::Structured qw(Tuple Optional);
+    use MooseX::Types::Structured qw(Tuple Optional);
 
     subtype StringIntOptionalHashRef,
      as Tuple[
@@ -175,7 +169,7 @@ Please note the subtle difference between undefined and null.  If you wish to
 allow both null and undefined, you should use the core Moose 'Maybe' type
 constraint instead:
 
-	package MyApp::Types;
+    package MyApp::Types;
 
     use MooseX::Types -declare [qw(StringIntMaybeHashRef)];
     use MooseX::Types::Moose qw(Str Int Maybe);
@@ -228,24 +222,24 @@ combine various structured, parameterized and simple constraints all together:
 
 Which would match:
 
-	[1, {name=>'John', age=>25},[10,11,12]];
+    [1, {name=>'John', age=>25},[10,11,12]];
 
 Please notice how the type parameters can be visually arranged to your liking
 and to improve the clarity of your meaning.  You don't need to run then
 altogether onto a single line.  Additionally, since the 'Dict' type constraint
 defines a hash constraint, the key order is not meaningful.  For example:
 
-	subtype AnyKeyOrder,
- 	 as Dict[
-		key1=>Int,
-		key2=>Str,
-		key3=>Int,
-	 ];
+    subtype AnyKeyOrder,
+      as Dict[
+        key1=>Int,
+        key2=>Str,
+        key3=>Int,
+     ];
 
 Would validate both:
 
-	{key1 => 1, key2 => "Hi!", key3 => 2};
-	{key2 => "Hi!", key1 => 100, key3 => 300};
+    {key1 => 1, key2 => "Hi!", key3 => 2};
+    {key2 => "Hi!", key1 => 100, key3 => 300};
 
 As you would expect, since underneath its just a plain old Perl hash at work.
 
@@ -420,53 +414,53 @@ Newer versions of L<MooseX::Types> support recursive type constraints.  That is
 you can include a type constraint as a contained type constraint of itself.  For
 example:
 
-	subtype Person,
-	 as Dict[
-	 	name=>Str,
-	 	friends=>Optional[
-	 		ArrayRef[Person]
-	 	],
-	 ];
+    subtype Person,
+     as Dict[
+         name=>Str,
+         friends=>Optional[
+             ArrayRef[Person]
+         ],
+     ];
 
 This would declare a Person subtype that contains a name and an optional
 ArrayRef of Persons who are friends as in:
 
-	{
-		name => 'Mike',
-		friends => [
-			{ name => 'John' },
-			{ name => 'Vincent' },
-			{
-				name => 'Tracey',
-				friends => [
-					{ name => 'Stephenie' },
-					{ name => 'Ilya' },
-				],
-			},
-		],
-	};
+    {
+        name => 'Mike',
+        friends => [
+            { name => 'John' },
+            { name => 'Vincent' },
+            {
+                name => 'Tracey',
+                friends => [
+                    { name => 'Stephenie' },
+                    { name => 'Ilya' },
+                ],
+            },
+        ],
+    };
 
 Please take care to make sure the recursion node is either Optional, or declare
 a Union with an non recursive option such as:
 
-	subtype Value
-	 as Tuple[
-	 	Str,
-	 	Str|Tuple,
-	 ];
+    subtype Value
+     as Tuple[
+         Str,
+         Str|Tuple,
+     ];
 
 Which validates:
 
-	[
-		'Hello', [
-			'World', [
-				'Is', [
-					'Getting',
-					'Old',
-				],
-			],
-		],
-	];
+    [
+        'Hello', [
+            'World', [
+                'Is', [
+                    'Getting',
+                    'Old',
+                ],
+            ],
+        ],
+    ];
 
 Otherwise you will define a subtype thatis impossible to validate since it is
 infinitely recursive.  For more information about defining recursive types,
@@ -635,25 +629,25 @@ other MooseX::Types libraries.
 
     subtype Person,
      as Dict[
-     	name=>Str,
-     	age=>Int,
+         name=>Str,
+         age=>Int,
      ];
 
     coerce Person,
      from Dict[
-     	first=>Str,
-     	last=>Str,
-     	years=>Int,
+         first=>Str,
+         last=>Str,
+         years=>Int,
      ], via { +{
         name => "$_->{first} $_->{last}",
         age => $_->{years},
      }},
      from Dict[
-     	fullname=>Dict[
-     		last=>Str,
-     		first=>Str,
-     	],
-     	dob=>DateTime,
+         fullname=>Dict[
+             last=>Str,
+             first=>Str,
+         ],
+         dob=>DateTime,
      ],
      ## DateTime needs to be inside of single quotes here to disambiguate the
      ## class package from the DataTime type constraint imported via the
@@ -728,13 +722,13 @@ Moose::Util::TypeConstraints::register_type_constraint($Optional);
 Moose::Util::TypeConstraints::add_parameterizable_type($Optional);
 
 Moose::Util::TypeConstraints::get_type_constraint_registry->add_type_constraint(
-	MooseX::Meta::TypeConstraint::Structured->new(
-		name => "MooseX::Types::Structured::Tuple" ,
-		parent => find_type_constraint('ArrayRef'),
-		constraint_generator=> sub {
-			## Get the constraints and values to check
+    MooseX::Meta::TypeConstraint::Structured->new(
+        name => "MooseX::Types::Structured::Tuple" ,
+        parent => find_type_constraint('ArrayRef'),
+        constraint_generator=> sub {
+            ## Get the constraints and values to check
             my ($type_constraints, $values) = @_;
-			my @type_constraints = defined $type_constraints ?
+            my @type_constraints = defined $type_constraints ?
              @$type_constraints : ();
 
             my $overflow_handler;
@@ -743,28 +737,28 @@ Moose::Util::TypeConstraints::get_type_constraint_registry->add_type_constraint(
                 $overflow_handler = pop @type_constraints;
             }
 
-			my @values = defined $values ? @$values: ();
-			## Perform the checking
-			while(@type_constraints) {
-				my $type_constraint = shift @type_constraints;
-				if(@values) {
-					my $value = shift @values;
-					unless($type_constraint->check($value)) {
+            my @values = defined $values ? @$values: ();
+            ## Perform the checking
+            while(@type_constraints) {
+                my $type_constraint = shift @type_constraints;
+                if(@values) {
+                    my $value = shift @values;
+                    unless($type_constraint->check($value)) {
                         $_[2]->{message} = $type_constraint->get_message($value)
                          if ref $_[2];
-						return;
-					}
-				} else {
+                        return;
+                    }
+                } else {
                     ## Test if the TC supports null values
                     unless ($type_constraint->is_subtype_of($Optional)) {
                         $_[2]->{message} = $type_constraint->get_message('NULL')
                          if ref $_[2];
-						return;
-					}
-				}
-			}
-			## Make sure there are no leftovers.
-			if(@values) {
+                        return;
+                    }
+                }
+            }
+            ## Make sure there are no leftovers.
+            if(@values) {
                 if($overflow_handler) {
                     return $overflow_handler->check([@values], $_[2]);
                 } else {
@@ -772,26 +766,26 @@ Moose::Util::TypeConstraints::get_type_constraint_registry->add_type_constraint(
                      if ref $_[2];
                     return;
                 }
-			} elsif(@type_constraints) {
+            } elsif(@type_constraints) {
                 $_[2]->{message} =
                  "Not enough values for all defined type constraints.  Remaining: ". join(', ',@type_constraints)
                  if ref $_[2];
-				return;
-			} else {
-				return 1;
-			}
-		}
-	)
+                return;
+            } else {
+                return 1;
+            }
+        }
+    )
 );
 
 Moose::Util::TypeConstraints::get_type_constraint_registry->add_type_constraint(
-	MooseX::Meta::TypeConstraint::Structured->new(
-		name => "MooseX::Types::Structured::Dict",
-		parent => find_type_constraint('HashRef'),
-		constraint_generator=> sub {
-			## Get the constraints and values to check
+    MooseX::Meta::TypeConstraint::Structured->new(
+        name => "MooseX::Types::Structured::Dict",
+        parent => find_type_constraint('HashRef'),
+        constraint_generator=> sub {
+            ## Get the constraints and values to check
             my ($type_constraints, $values) = @_;
-			my @type_constraints = defined $type_constraints ?
+            my @type_constraints = defined $type_constraints ?
              @$type_constraints : ();
 
             my $overflow_handler;
@@ -800,30 +794,30 @@ Moose::Util::TypeConstraints::get_type_constraint_registry->add_type_constraint(
                 $overflow_handler = pop @type_constraints;
             }
             my (%type_constraints) = @type_constraints;
-			my %values = defined $values ? %$values: ();
-			## Perform the checking
-			while(%type_constraints) {
-				my($key, $type_constraint) = each %type_constraints;
-				delete $type_constraints{$key};
-				if(exists $values{$key}) {
-					my $value = $values{$key};
-					delete $values{$key};
-					unless($type_constraint->check($value)) {
+            my %values = defined $values ? %$values: ();
+            ## Perform the checking
+            while(%type_constraints) {
+                my($key, $type_constraint) = each %type_constraints;
+                delete $type_constraints{$key};
+                if(exists $values{$key}) {
+                    my $value = $values{$key};
+                    delete $values{$key};
+                    unless($type_constraint->check($value)) {
                         $_[2]->{message} = $type_constraint->get_message($value)
                          if ref $_[2];
-						return;
-					}
-				} else {
+                        return;
+                    }
+                } else {
                     ## Test to see if the TC supports null values
                     unless ($type_constraint->is_subtype_of($Optional)) {
                         $_[2]->{message} = $type_constraint->get_message('NULL')
                          if ref $_[2];
-						return;
-					}
-				}
-			}
-			## Make sure there are no leftovers.
-			if(%values) {
+                        return;
+                    }
+                }
+            }
+            ## Make sure there are no leftovers.
+            if(%values) {
                 if($overflow_handler) {
                     return $overflow_handler->check(+{%values});
                 } else {
@@ -831,16 +825,16 @@ Moose::Util::TypeConstraints::get_type_constraint_registry->add_type_constraint(
                      if ref $_[2];
                     return;
                 }
-			} elsif(%type_constraints) {
+            } elsif(%type_constraints) {
                 $_[2]->{message} =
                  "Not enough values for all defined type constraints.  Remaining: ". join(', ',values %values)
                  if ref $_[2];
-				return;
-			} else {
-				return 1;
-			}
-		},
-	)
+                return;
+            } else {
+                return 1;
+            }
+        },
+    )
 );
 
 Moose::Util::TypeConstraints::get_type_constraint_registry->add_type_constraint(
@@ -884,8 +878,8 @@ Moose::Util::TypeConstraints::get_type_constraint_registry->add_type_constraint(
 );
 
 sub slurpy ($) {
-	my ($tc) = @_;
-	return MooseX::Types::Structured::OverflowHandler->new(
+    my ($tc) = @_;
+    return MooseX::Types::Structured::OverflowHandler->new(
         type_constraint => $tc,
     );
 }
@@ -901,30 +895,10 @@ L<MooseX::Meta::TypeConstraint::Structured>
 
 Here's a list of stuff I would be happy to get volunteers helping with:
 
-	* All POD examples need test cases in t/documentation/*.t
-	* Want to break out the examples section to a separate cookbook style POD.
-	* Want more examples and best practice / usage guidance for authors
-	* Need to clarify deep coercions,
-
-=head1 AUTHOR
-
-John Napiorkowski <jjnapiork@cpan.org>
-
-=head1 CONTRIBUTORS
-
-The following people have contributed to this module and agree with the listed
-Copyright & license information included below:
-
-    Florian Ragwitz, <rafl@debian.org>
-    Yuval Kogman, <nothingmuch@woobling.org>
-    Tomas Doran, <bobtfish@bobtfish.net>
-
-=head1 COPYRIGHT & LICENSE
-
-Copyright 2008-2009, John Napiorkowski <jjnapiork@cpan.org>
-
-This program is free software; you can redistribute it and/or modify it under
-the same terms as Perl itself.
+    * All POD examples need test cases in t/documentation/*.t
+    * Want to break out the examples section to a separate cookbook style POD.
+    * Want more examples and best practice / usage guidance for authors
+    * Need to clarify deep coercions,
 
 =cut
 
