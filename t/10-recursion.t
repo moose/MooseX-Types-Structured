@@ -12,7 +12,7 @@ BEGIN {
     use Moose::Util::TypeConstraints;
     use MooseX::Types::Structured qw(Dict Tuple);
     use MooseX::Types::Moose qw(
-        Int 
+        Int
         Str 
         ScalarRef
     );
