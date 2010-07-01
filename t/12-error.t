@@ -76,7 +76,7 @@ like $optional_tuple->validate(['a','b']),
  'Correctly failed due to "a" not an Int';
 
 like $optional_tuple->validate([1,$simple_tuple]),
- qr/failed for 'MooseX::Types::Structured::Optional\[Str\]' with value MooseX/,
+ qr/failed for 'Optional\[Str\]' with value MooseX/,
  'Correctly failed due to object not a Str';
 
 like $optional_tuple->validate([1,'hello','too many']),
@@ -88,7 +88,7 @@ like $optional_dict->validate([1,2]),
  'Wrong basic type';
 
 like $optional_dict->validate({name=>'John',age=>'a'}),
- qr/Validation failed for 'MooseX::Types::Structured::Optional\[Int\]' with value a/,
+ qr/Validation failed for 'Optional\[Int\]' with value a/,
  'Correctly failed due to age not an Int';
 
 like $optional_dict->validate({name=>$simple_dict,age=>1}),
@@ -117,7 +117,7 @@ ok $deep_tuple->check([1,{a=>2},{name=>'Vincent',age=>15}]),
 {
     my $message = $deep_tuple->validate([1,{a=>2},{name=>'Vincent',age=>'Hello'}]);
     like $message,
-      qr/Validation failed for 'MooseX::Types::Structured::Dict\[name,Str,age,Int\]'/,
+      qr/Validation failed for 'Dict\[name,Str,age,Int\]'/,
       'Example deeper error';
 }
 
