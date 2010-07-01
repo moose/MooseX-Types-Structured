@@ -13,7 +13,6 @@ has 'level' => (
     },
 );
 
-# :level, :message, :tc
 has 'messages' => (
     traits => ['Array'],
     is => 'ro',

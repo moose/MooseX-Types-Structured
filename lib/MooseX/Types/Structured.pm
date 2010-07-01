@@ -912,15 +912,6 @@ The following modules or resources may be of interest.
 L<Moose>, L<MooseX::Types>, L<Moose::Meta::TypeConstraint>,
 L<MooseX::Meta::TypeConstraint::Structured>
 
-=head1 TODO
-
-Here's a list of stuff I would be happy to get volunteers helping with:
-
-    * All POD examples need test cases in t/documentation/*.t
-    * Want to break out the examples section to a separate cookbook style POD.
-    * Want more examples and best practice / usage guidance for authors
-    * Need to clarify deep coercions,
-
 =cut
 
 1;
