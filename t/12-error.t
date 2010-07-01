@@ -131,6 +131,12 @@ like $deep_tuple->validate([1,{a=>2},{name=>'Vincent1',age=>'Hello1'}]),
   qr/'Int' with value Hello1/,
   'correct deeper error';
 
+## Success Tests...
+
+ok !$deep_tuple->validate([1,{a=>2},{name=>'John',age=>40}]), 'Validates ok';
+
+## Deeper Tests...
+
 my $deeper_tc = subtype
   as Dict[
     a => Tuple[
@@ -160,7 +166,4 @@ my $deeper_tc = subtype
     warn $message;
 }
 
-## Success Tests...
-
-ok !$deep_tuple->validate([1,{a=>2},{name=>'John',age=>40}]), 'Validates ok';
 
