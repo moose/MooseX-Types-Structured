@@ -29,10 +29,12 @@ has 'messages' => (
 
 sub as_string {
     my @messages = (shift)->all_messages;
-    my $message = join("", map { "\n". (" " x $_->{level}) ."[+] " . $_->{message} } reverse @messages);
-    return $message;
-}
+    my @flattened_msgs =  map {
+        "\n". (" " x $_->{level}) ."[+] " . $_->{message};
+    } reverse @messages;
 
+    return join("", @flattened_msgs);
+}
 
 no Moose;
 __PACKAGE__->meta->make_immutable;
