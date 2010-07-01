@@ -66,31 +66,29 @@ Messing with validate so that we can support niced error messages.
 =cut
 
 override 'validate' => sub {
-    my ($self, $value, $message) = @_;
-    $message = bless {message=>undef, level=>0}, 'MooseX::Types::Structured::Message'
-      unless $message;
+    my ($self, $value, $message_stack) = @_;
+    unless ($message_stack) {
+        $message_stack = MooseX::Types::Structured::MessageStack->new();
+    }
 
-    $message->{level}++;
+    $message_stack->inc_level;
 
-    if ($self->_compiled_type_constraint->($value, $message)) {
+    if ($self->_compiled_type_constraint->($value, $message_stack)) {
         ## Everything is good, no error message to return
         return undef;
     } else {
         ## Whoops, need to figure out the right error message
         my $args = Devel::PartialDump::dump($value);
-        if(my $messages = $message->{message}) {
-            my $level = $message->{level};
-            my $message_str = ref $messages ? join("\n".(" "x$level)."[+] ",reverse @$messages) : $messages;        
-            $message->{level}--;
-
-            if($message->{level}) {
+        $message_stack->dec_level;
+        if($message_stack->has_messages) {
+            if($message_stack->level) {
+                ## we are inside a deeply structured constraint
                 return $self->get_message($args);
             } else {
+                my $message_str = $message_stack->as_string;
                 return $self->get_message("$args, Internal Validation Error is: $message_str");
             }
         } else {
-            $message->{level}--;
-
             return $self->get_message($args);
         }
     }

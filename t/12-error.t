@@ -1,8 +1,6 @@
-BEGIN {
-    use strict;
-    use warnings;
-    use Test::More tests=>27;
-}
+use strict;
+use warnings;
+use Test::More;
 
 use Moose::Util::TypeConstraints;
 use MooseX::Types::Structured qw(Dict Tuple Optional);
@@ -135,35 +133,4 @@ like $deep_tuple->validate([1,{a=>2},{name=>'Vincent1',age=>'Hello1'}]),
 
 ok !$deep_tuple->validate([1,{a=>2},{name=>'John',age=>40}]), 'Validates ok';
 
-## Deeper Tests...
-
-my $deeper_tc = subtype
-  as Dict[
-    a => Tuple[
-        Dict[
-            a1a => Tuple[Int],
-            a1b => Tuple[Int],
-        ],
-        Dict[
-            a2a => Tuple[Int],
-            a2b => Tuple[Int],
-        ],
-    ],
-    b => Tuple[
-        Dict[
-            b1a => Tuple[Int],
-            b1b => Tuple[Int],
-        ],
-        Dict[
-            b2a => Tuple[Int],
-            b2b => Tuple[Int],
-        ],
-    ],
-  ];
-
-{
-    my $message = $deeper_tc->validate({a=>[{a1a=>[1],a1b=>[2]},{a2a=>[3],a2b=>[4]}],b=>[{b1a=>[5],b1b=>['AA']},{b2a=>[7],b2b=>[8]}]});
-    warn $message;
-}
-
-
+done_testing();

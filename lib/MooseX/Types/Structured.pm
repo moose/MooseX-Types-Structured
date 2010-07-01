@@ -7,6 +7,7 @@ use Moose::Util::TypeConstraints 1.06;
 use MooseX::Meta::TypeConstraint::Structured;
 use MooseX::Meta::TypeConstraint::Structured::Optional;
 use MooseX::Types::Structured::OverflowHandler;
+use MooseX::Types::Structured::MessageStack;
 use MooseX::Types 0.22 -declare => [qw(Dict Map Tuple Optional)];
 use Sub::Exporter 0.982 -setup => [ qw(Dict Map Tuple Optional slurpy) ];
 use Devel::PartialDump 0.10;
@@ -744,21 +745,19 @@ Moose::Util::TypeConstraints::get_type_constraint_registry->add_type_constraint(
                 if(@values) {
                     my $value = shift @values;
                     unless($type_constraint->check($value)) {
-                        my $message = $type_constraint->validate($value,$_[2]);
-                        if(ref $_[2]) {
-                            push @{$_[2]->{message}}, $message
-                             if ref $_[2];
-                            return;
-                        } else {
-#warn "Don't know what to do with $message";
-return;
+                        if($_[2]) {
+                           my $message = $type_constraint->validate($value,$_[2]);
+                           $_[2]->add_message({message=>$message,level=>$_[2]->level});
                         }
+                        return;
                     }
                 } else {
                     ## Test if the TC supports null values
                     unless ($type_constraint->is_subtype_of($Optional)) {
-                        $_[2]->{message} = $type_constraint->get_message('NULL')
-                         if ref $_[2];
+                        if($_[2]) {
+                           my $message = $type_constraint->get_message('NULL',$_[2]);
+                           $_[2]->add_message({message=>$message,level=>$_[2]->level});
+                        }
                         return;
                     }
                 }
@@ -768,14 +767,17 @@ return;
                 if($overflow_handler) {
                     return $overflow_handler->check([@values], $_[2]);
                 } else {
-                    $_[2]->{message} = "More values than Type Constraints!"
-                     if ref $_[2];
+                    if($_[2]) {
+                        my $message = "More values than Type Constraints!";
+                        $_[2]->add_message({message=>$message,level=>$_[2]->level});
+                    }
                     return;
                 }
             } elsif(@type_constraints) {
-                $_[2]->{message} =
-                 "Not enough values for all defined type constraints.  Remaining: ". join(', ',@type_constraints)
-                 if ref $_[2];
+                if($_[2]) {
+                    my $message = "Not enough values for all defined type constraints.  Remaining: ". join(', ',@type_constraints);
+                    $_[2]->add_message({message=>$message,level=>$_[2]->level});
+                }
                 return;
             } else {
                 return 1;
@@ -809,21 +811,19 @@ Moose::Util::TypeConstraints::get_type_constraint_registry->add_type_constraint(
                     my $value = $values{$key};
                     delete $values{$key};
                     unless($type_constraint->check($value)) {
-                        my $message = $type_constraint->validate($value,$_[2]);
-                        if(ref $_[2]) {
-                            push @{$_[2]->{message}}, $message
-                             if ref $_[2];
-                            return;
-                        } else {
-#warn "Don't know what to do with $message";
-return;
+                        if($_[2]) {
+                            my $message = $type_constraint->validate($value,$_[2]);
+                            $_[2]->add_message({message=>$message,level=>$_[2]->level});
                         }
+                        return;
                     }
                 } else {
                     ## Test to see if the TC supports null values
                     unless ($type_constraint->is_subtype_of($Optional)) {
-                        $_[2]->{message} = $type_constraint->get_message('NULL')
-                         if ref $_[2];
+                        if($_[2]) {
+                           my $message = $type_constraint->get_message('NULL',$_[2]);
+                           $_[2]->add_message({message=>$message,level=>$_[2]->level});
+                        }
                         return;
                     }
                 }
@@ -833,14 +833,17 @@ return;
                 if($overflow_handler) {
                     return $overflow_handler->check(+{%values});
                 } else {
-                    $_[2]->{message} = "More values than Type Constraints!"
-                     if ref $_[2];
+                    if($_[2]) {
+                        my $message = "More values than Type Constraints!";
+                        $_[2]->add_message({message=>$message,level=>$_[2]->level});
+                    }
                     return;
                 }
             } elsif(%type_constraints) {
-                $_[2]->{message} =
-                 "Not enough values for all defined type constraints.  Remaining: ". join(', ',values %values)
-                 if ref $_[2];
+                if($_[2]) {
+                    my $message = "Not enough values for all defined type constraints.  Remaining: ". join(', ',@type_constraints);
+                    $_[2]->add_message({message=>$message,level=>$_[2]->level});
+                }
                 return;
             } else {
                 return 1;
@@ -869,7 +872,10 @@ Moose::Util::TypeConstraints::get_type_constraint_registry->add_type_constraint(
       if ($value_type) {
         for my $value (values %$values) {
           unless ($value_type->check($value)) {
-            $_[2]->{message} = $value_type->get_message($value) if ref $_[2];
+            if($_[2]) {
+              my $message = $value_type->validate($value,$_[2]);
+              $_[2]->add_message({message=>$message,level=>$_[2]->level});
+            }
             return;
           }
         }
@@ -878,7 +884,10 @@ Moose::Util::TypeConstraints::get_type_constraint_registry->add_type_constraint(
       if ($key_type) {
         for my $key (keys %$values) {
           unless ($key_type->check($key)) {
-            $_[2]->{message} = $key_type->get_message($key) if ref $_[2];
+            if($_[2]) {
+              my $message = $key_type->validate($key,$_[2]);
+              $_[2]->add_message({message=>$message,level=>$_[2]->level});
+            }
             return;
           }
         }
