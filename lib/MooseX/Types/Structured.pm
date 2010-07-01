@@ -744,9 +744,15 @@ Moose::Util::TypeConstraints::get_type_constraint_registry->add_type_constraint(
                 if(@values) {
                     my $value = shift @values;
                     unless($type_constraint->check($value)) {
-                        $_[2]->{message} = $type_constraint->get_message($value)
-                         if ref $_[2];
-                        return;
+                        my $message = $type_constraint->validate($value,$_[2]);
+                        if(ref $_[2]) {
+                            push @{$_[2]->{message}}, $message
+                             if ref $_[2];
+                            return;
+                        } else {
+#warn "Don't know what to do with $message";
+return;
+                        }
                     }
                 } else {
                     ## Test if the TC supports null values
@@ -782,7 +788,7 @@ Moose::Util::TypeConstraints::get_type_constraint_registry->add_type_constraint(
     MooseX::Meta::TypeConstraint::Structured->new(
         name => "MooseX::Types::Structured::Dict",
         parent => find_type_constraint('HashRef'),
-        constraint_generator=> sub {
+        constraint_generator => sub {
             ## Get the constraints and values to check
             my ($type_constraints, $values) = @_;
             my @type_constraints = defined $type_constraints ?
@@ -803,9 +809,15 @@ Moose::Util::TypeConstraints::get_type_constraint_registry->add_type_constraint(
                     my $value = $values{$key};
                     delete $values{$key};
                     unless($type_constraint->check($value)) {
-                        $_[2]->{message} = $type_constraint->get_message($value)
-                         if ref $_[2];
-                        return;
+                        my $message = $type_constraint->validate($value,$_[2]);
+                        if(ref $_[2]) {
+                            push @{$_[2]->{message}}, $message
+                             if ref $_[2];
+                            return;
+                        } else {
+#warn "Don't know what to do with $message";
+return;
+                        }
                     }
                 } else {
                     ## Test to see if the TC supports null values
