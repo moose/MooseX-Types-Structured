@@ -65,6 +65,12 @@ Messing with validate so that we can support niced error messages.
 
 =cut
 
+sub _clean_message {
+    my $message = shift @_;
+    $message =~s/MooseX::Types::Structured:://g;
+    return $message;
+}
+
 override 'validate' => sub {
     my ($self, $value, $message_stack) = @_;
     unless ($message_stack) {
@@ -86,7 +92,7 @@ override 'validate' => sub {
                 return $self->get_message($args);
             } else {
                 my $message_str = $message_stack->as_string;
-                return $self->get_message("$args, Internal Validation Error is: $message_str");
+                return _clean_message($self->get_message("$args, Internal Validation Error is: $message_str"));
             }
         } else {
             return $self->get_message($args);

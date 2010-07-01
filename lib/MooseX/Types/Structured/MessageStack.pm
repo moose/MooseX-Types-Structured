@@ -27,15 +27,9 @@ has 'messages' => (
     },
 );
 
-sub _clean_message {
-    my $message = shift @_;
-    $message =~s/MooseX::Types::Structured:://g;
-    return $message;
-}
-
 sub as_string {
     my @messages = (shift)->all_messages;
-    my $message = join("", map { "\n". (" " x $_->{level}) ."[+] " . _clean_message($_->{message}) } reverse @messages);
+    my $message = join("", map { "\n". (" " x $_->{level}) ."[+] " . $_->{message} } reverse @messages);
     return $message;
 }
 
