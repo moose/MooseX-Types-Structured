@@ -109,12 +109,7 @@ of values (to be passed at check time)
 
 sub generate_constraint_for {
     my ($self, $type_constraints) = @_;
-    return sub {
-        my $arg =  shift @_;
-        my $constraint_generator = $self->constraint_generator;
-        my $result = $constraint_generator->($type_constraints, $arg, $_[0]);
-        return $result;
-    };
+    return $self->constraint_generator->($self, $type_constraints);
 }
 
 =method parameterize (@type_constraints)
