@@ -1,5 +1,9 @@
 Revision history for MooseX-Types-Structured
 
+{{NEXT}}
+        - The test suite now uses Test::Fatal instead of Test::Exception (Karen
+          Etheridge).
+
 0.24   16 November 2010
         - Added some performance enhancing caching code (phaeton)
 
