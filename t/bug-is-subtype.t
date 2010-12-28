@@ -81,5 +81,4 @@ ok(
   'is not a subtype',
 );
 
-
 done_testing;
