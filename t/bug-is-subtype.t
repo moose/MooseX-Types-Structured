@@ -71,7 +71,7 @@ ok(
 
 ok(
   !moosex::types::structured::bug_is_subtype::ThingType
-    ->equal(undef),
+    ->equals(undef),
   'is not a subtype',
 );
 
