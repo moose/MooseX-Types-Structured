@@ -197,7 +197,8 @@ Override the base class behavior.
 
 sub equals {
     my ( $self, $type_or_name ) = @_;
-    my $other = Moose::Util::TypeConstraints::find_type_constraint($type_or_name);
+    my $other = Moose::Util::TypeConstraints::find_type_constraint($type_or_name)
+      or return;
 
     return unless $other->isa(__PACKAGE__);
 
@@ -210,7 +211,8 @@ sub equals {
 
 sub is_a_type_of {
     my ( $self, $type_or_name ) = @_;
-    my $other = Moose::Util::TypeConstraints::find_type_constraint($type_or_name);
+    my $other = Moose::Util::TypeConstraints::find_type_constraint($type_or_name)
+      or return;
 
     if ( $other->isa(__PACKAGE__) and @{ $other->type_constraints || [] }) {
         if ( $self->parent->is_a_type_of($other->parent) ) {
@@ -228,7 +230,8 @@ sub is_a_type_of {
 
 sub is_subtype_of {
     my ( $self, $type_or_name ) = @_;
-    my $other = Moose::Util::TypeConstraints::find_type_constraint($type_or_name);
+    my $other = Moose::Util::TypeConstraints::find_type_constraint($type_or_name)
+      or return;
     if ( $other->isa(__PACKAGE__) ) {
         if ( $other->type_constraints and $self->type_constraints ) {
             if ( $self->parent->is_a_type_of($other->parent) ) {
