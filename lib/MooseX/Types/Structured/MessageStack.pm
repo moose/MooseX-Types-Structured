@@ -1,4 +1,6 @@
-package MooseX::Types::Structured::MessageStack;
+package ## Hide from PAUSE
+  MooseX::Types::Structured::MessageStack;
+
 use Moose;
 
 =attr level

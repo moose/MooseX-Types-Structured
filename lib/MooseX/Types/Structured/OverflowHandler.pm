@@ -1,4 +1,5 @@
-package MooseX::Types::Structured::OverflowHandler;
+package ## Hide from PAUSE
+  MooseX::Types::Structured::OverflowHandler;
 
 use Moose;
 

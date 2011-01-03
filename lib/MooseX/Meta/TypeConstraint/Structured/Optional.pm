@@ -1,4 +1,5 @@
-package MooseX::Meta::TypeConstraint::Structured::Optional;
+package ## Hide from PAUSE
+  MooseX::Meta::TypeConstraint::Structured::Optional;
 
 use Moose;
 use MooseX::Meta::TypeCoercion::Structured::Optional;
