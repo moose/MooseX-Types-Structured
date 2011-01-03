@@ -1,6 +1,6 @@
 Revision history for MooseX-Types-Structured
 
-0.26   02 January 2010
+0.26   02 January 2011
         - removed version from Test::Fatal as asked by the debian folks
         - small documentation updates
 
