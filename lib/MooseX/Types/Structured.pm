@@ -758,6 +758,14 @@ Moose::Util::TypeConstraints::get_type_constraint_registry->add_type_constraint(
                 $overflow_handler = pop @type_constraints;
             }
 
+            my $length = $#type_constraints;
+            foreach my $idx (0..$length) {
+                unless(blessed $type_constraints[$idx]) {
+                    ($type_constraints[$idx] = find_type_constraint($type_constraints[$idx]))
+                      || die "$type_constraints[$idx] is not a registered type";
+                }
+            }
+
             my (@checks, @optional, $o_check, $is_compiled);
             return sub {
                 my ($values, $err) = @_;
@@ -838,7 +846,13 @@ Moose::Util::TypeConstraints::get_type_constraint_registry->add_type_constraint(
               && $type_constraints[-1]->isa('MooseX::Types::Structured::OverflowHandler')) {
                 $overflow_handler = pop @type_constraints;
             }
-            my (%type_constraints) = @type_constraints;
+            my %type_constraints = @type_constraints;
+            foreach my $key (keys %type_constraints) {
+                unless(blessed $type_constraints{$key}) {
+                    ($type_constraints{$key} = find_type_constraint($type_constraints{$key}))
+                      || die "$type_constraints{$key} is not a registered type";
+                }
+            }
 
             my (%check, %optional, $o_check, $is_compiled);
             return sub {
