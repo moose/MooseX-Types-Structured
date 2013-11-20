@@ -3,6 +3,7 @@ Revision history for {{$dist->name}}
 {{$NEXT}}
         - fixed use of an interface that was deprecated in Moose-2.1100
           (ether)
+        - repository migrated from shadowcat to the github moose organization
 
 0.28   2011-10-03
         - Fixed regression where mixed type constraints (MX:Types style and
