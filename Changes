@@ -1,5 +1,6 @@
-Revision history for MooseX-Types-Structured
+Revision history for {{$dist->name}}
 
+{{$NEXT}}
         - fixed use of an interface that was deprecated in Moose-2.1100
           (ether)
 

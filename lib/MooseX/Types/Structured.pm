@@ -10,7 +10,7 @@ use MooseX::Types::Structured::OverflowHandler;
 use MooseX::Types::Structured::MessageStack;
 use MooseX::Types 0.22 -declare => [qw(Dict Map Tuple Optional)];
 use Sub::Exporter 0.982 -setup => [ qw(Dict Map Tuple Optional slurpy) ];
-use Devel::PartialDump 0.10;
+use Devel::PartialDump 0.13;
 use Scalar::Util qw(blessed);
 
 =head1 SYNOPSIS
