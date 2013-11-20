@@ -1,6 +1,6 @@
 package ## Hide from PAUSE
  MooseX::Meta::TypeConstraint::Structured;
-# ABSTRACT: MooseX::Meta::TypeConstraint::Structured - Structured type constraints.
+# ABSTRACT: Structured type constraints.
 
 use Moose;
 use Devel::PartialDump;
@@ -13,12 +13,12 @@ extends 'Moose::Meta::TypeConstraint';
 
 A structure is a set of L<Moose::Meta::TypeConstraint> that are 'aggregated' in
 such a way as that they are all applied to an incoming list of arguments.  The
-idea here is that a Type Constraint could be something like, "An Int followed by
-an Int and then a Str" and that this could be done so with a declaration like:
+idea here is that a Type Constraint could be something like, "An C<Int> followed by
+an C<Int> and then a C<Str>" and that this could be done so with a declaration like:
 
     Tuple[Int,Int,Str]; ## Example syntax
 
-So a structure is a list of Type constraints (the "Int,Int,Str" in the above
+So a structure is a list of type constraints (the C<Int,Int,Str> in the above
 example) which are intended to function together.
 
 =attr type_constraints
@@ -34,6 +34,8 @@ has 'type_constraints' => (
 );
 
 =attr constraint_generator
+
+=for stopwords subref
 
 A subref or closure that contains the way we validate incoming values against
 a set of type constraints.
@@ -61,7 +63,7 @@ sub _build_coercion {
 
 =method validate
 
-Messing with validate so that we can support niced error messages.
+Messing with validate so that we can support nicer error messages.
 
 =cut
 
@@ -112,6 +114,8 @@ sub generate_constraint_for {
     return $self->constraint_generator->($self, $type_constraints);
 }
 
+=for stopwords parameterize
+
 =method parameterize (@type_constraints)
 
 Given a ref of type constraints, create a structured type.
@@ -133,6 +137,8 @@ sub parameterize {
 }
 
 =method __infer_constraint_generator
+
+=for stopwords servicable
 
 This returns a CODEREF which generates a suitable constraint generator.  Not
 user servicable, you'll never call this directly.

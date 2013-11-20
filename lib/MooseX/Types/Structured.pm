@@ -1,5 +1,5 @@
 package MooseX::Types::Structured;
-# ABSTRACT: MooseX::Types::Structured - Structured Type Constraints for Moose
+# ABSTRACT: Structured Type Constraints for Moose
 
 use 5.008;
 
@@ -68,7 +68,7 @@ Or with:
         description => ['A great student!'],
     );
 
-But all of these would cause a constraint error for the 'name' attribute:
+But all of these would cause a constraint error for the C<name> attribute:
 
     ## Value for 'name' not a HashRef
     Person->new( name => 'John' );
@@ -91,7 +91,7 @@ But all of these would cause a constraint error for the 'name' attribute:
         last => 'Li',
     });
 
-And these would cause a constraint error for the 'description' attribute:
+And these would cause a constraint error for the C<description> attribute:
 
     ## Should be an ArrayRef
     Person->new( description => 'Hello I am a String' );
@@ -107,13 +107,13 @@ Please see the test cases for more examples.
 =head1 DESCRIPTION
 
 A structured type constraint is a standard container L<Moose> type constraint,
-such as an ArrayRef or HashRef, which has been enhanced to allow you to
+such as an C<ArrayRef> or C<HashRef>, which has been enhanced to allow you to
 explicitly name all the allowed type constraints inside the structure.  The
 generalized form is:
 
     TypeConstraint[@TypeParameters or %TypeParameters]
 
-Where 'TypeParameters' is an array reference or hash references of
+Where C<TypeParameters> is an array reference or hash references of
 L<Moose::Meta::TypeConstraint> objects.
 
 This type library enables structured type constraints. It is built on top of the
@@ -123,7 +123,7 @@ if you are not familiar with it.
 =head2 Comparing Parameterized types to Structured types
 
 Parameterized constraints are built into core Moose and you are probably already
-familiar with the type constraints 'HashRef' and 'ArrayRef'.  Structured types
+familiar with the type constraints C<HashRef> and C<ArrayRef>.  Structured types
 have similar functionality, so their syntax is likewise similar. For example,
 you could define a parameterized constraint like:
 
@@ -137,8 +137,8 @@ other hand, a structured type constraint explicitly names all it's allowed
     subtype StringFollowedByInt,
      as Tuple[Str,Int];
 
-would constrain it's value to things like ['hello', 111] but ['hello', 'world']
-would fail, as well as ['hello', 111, 'world'] and so on.  Here's another
+would constrain its value to things like C<< ['hello', 111] >>  but C<< ['hello', 'world'] >>
+would fail, as well as C<< ['hello', 111, 'world'] >> and so on.  Here's another
 example:
 
 	package MyApp::Types;
@@ -159,15 +159,15 @@ This defines a type constraint that validates values like:
     ['World', 200];
 
 Notice that the last type constraint in the structure is optional.  This is
-enabled via the helper Optional type constraint, which is a variation of the
-core Moose type constraint 'Maybe'.  The main difference is that Optional type
-constraints are required to validate if they exist, while 'Maybe' permits
+enabled via the helper C<Optional> type constraint, which is a variation of the
+core Moose type constraint C<Maybe>.  The main difference is that C<Optional> type
+constraints are required to validate if they exist, while C<Maybe> permits
 undefined values.  So the following example would not validate:
 
     StringIntOptionalHashRef->validate(['Hello Undefined', 1000, undef]);
 
 Please note the subtle difference between undefined and null.  If you wish to
-allow both null and undefined, you should use the core Moose 'Maybe' type
+allow both null and undefined, you should use the core Moose C<Maybe> type
 constraint instead:
 
     package MyApp::Types;
@@ -188,7 +188,7 @@ This would validate the following:
     ['World', 200];
 
 Structured constraints are not limited to arrays.  You can define a structure
-against a HashRef with the 'Dict' type constaint as in this example:
+against a C<HashRef> with the C<Dict> type constraint as in this example:
 
     subtype FirstNameLastName,
      as Dict[
@@ -196,7 +196,7 @@ against a HashRef with the 'Dict' type constaint as in this example:
         lastname => Str,
      ];
 
-This would constrain a HashRef that validates something like:
+This would constrain a C<HashRef> that validates something like:
 
     {firstname => 'Christopher', lastname => 'Parsons'};
 
@@ -227,7 +227,7 @@ Which would match:
 
 Please notice how the type parameters can be visually arranged to your liking
 and to improve the clarity of your meaning.  You don't need to run then
-altogether onto a single line.  Additionally, since the 'Dict' type constraint
+altogether onto a single line.  Additionally, since the C<Dict> type constraint
 defines a hash constraint, the key order is not meaningful.  For example:
 
     subtype AnyKeyOrder,
@@ -242,7 +242,7 @@ Would validate both:
     {key1 => 1, key2 => "Hi!", key3 => 2};
     {key2 => "Hi!", key1 => 100, key3 => 300};
 
-As you would expect, since underneath its just a plain old Perl hash at work.
+As you would expect, since underneath it's just a plain old Perl hash at work.
 
 =head2 Alternatives
 
@@ -268,7 +268,7 @@ example:
         ),
     );
 
-This method may take some additional time to setup but will give you more
+This method may take some additional time to set up but will give you more
 flexibility.  However, structured constraints are highly compatible with this
 method, granting some interesting possibilities for coercion.  Try:
 
@@ -336,6 +336,8 @@ If you are not familiar with how coercions work, check out the L<Moose> cookbook
 entry L<Moose::Cookbook::Recipe5> for an explanation.  The section L</Coercions>
 has additional examples and discussion.
 
+=for stopwords Subtyping
+
 =head2 Subtyping a Structured type constraint
 
 You need to exercise some care when you try to subtype a structured type as in
@@ -402,10 +404,10 @@ Coercions currently work for 'one level' deep.  That is you can do:
      };
 
 And that should just work as expected.  However, if there are any 'inner'
-coercions, such as a coercion on 'Fullname' or on 'DateTime', that coercion
+coercions, such as a coercion on C<Fullname> or on C<DateTime>, that coercion
 won't currently get activated.
 
-Please see the test '07-coerce.t' for a more detailed example.  Discussion on
+Please see the test F<07-coerce.t> for a more detailed example.  Discussion on
 extending coercions to support this welcome on the Moose development channel or
 mailing list.
 
@@ -423,8 +425,8 @@ example:
          ],
      ];
 
-This would declare a Person subtype that contains a name and an optional
-ArrayRef of Persons who are friends as in:
+This would declare a C<Person> subtype that contains a name and an optional
+C<ArrayRef> of C<Person>s who are friends as in:
 
     {
         name => 'Mike',
@@ -441,8 +443,8 @@ ArrayRef of Persons who are friends as in:
         ],
     };
 
-Please take care to make sure the recursion node is either Optional, or declare
-a Union with an non recursive option such as:
+Please take care to make sure the recursion node is either C<Optional>, or declare
+a union with an non-recursive option such as:
 
     subtype Value
      as Tuple[
@@ -463,7 +465,7 @@ Which validates:
         ],
     ];
 
-Otherwise you will define a subtype thatis impossible to validate since it is
+Otherwise you will define a subtype that is impossible to validate since it is
 infinitely recursive.  For more information about defining recursive types,
 please see the documentation in L<MooseX::Types> and the test cases.
 
@@ -493,23 +495,23 @@ hashref.  For example:
 
     Dict[name=>Str, age=>Int]; ## Validates {name=>'John', age=>39}
 
-The keys in %constraints follow the same rules as @constraints in the above
+The keys in C<%constraints> follow the same rules as C<@constraints> in the above
 section.
 
 =head2 Map[ $key_constraint, $value_constraint ]
 
-This defines a HashRef based constraint in which both the keys and values are
+This defines a C<HashRef>-based constraint in which both the keys and values are
 required to meet certain constraints.  For example, to map hostnames to IP
 addresses, you might say:
 
   Map[ HostName, IPAddress ]
 
-The type constraint would only be met if every key was a valid HostName and
-every value was a valid IPAddress.
+The type constraint would only be met if every key was a valid C<HostName> and
+every value was a valid C<IPAddress>.
 
 =head2 Optional[$constraint]
 
-This is primarily a helper constraint for Dict and Tuple type constraints.  What
+This is primarily a helper constraint for C<Dict> and C<Tuple> type constraints.  What
 this allows is for you to assert that a given type constraint is allowed to be
 null (but NOT undefined).  If the value is null, then the type constraint passes
 but if the value is defined it must validate against the type constraint.  This
@@ -522,7 +524,7 @@ or a tuple where some of the values are not required.  For example:
         middle=>Optional[Str],
     ];
 
-Creates a constraint that validates against a hashref with the keys 'first' and
+...creates a constraint that validates against a hashref with the keys 'first' and
 'last' being strings and required while an optional key 'middle' is must be a
 string if it appears but doesn't have to appear.  So in this case both the
 following are valid:
@@ -530,12 +532,14 @@ following are valid:
     {first=>'John', middle=>'James', last=>'Napiorkowski'}
     {first=>'Vanessa', last=>'Li'}
 
-If you use the 'Maybe' type constraint instead, your values will also validate
-against 'undef', which may be incorrect for you.
+If you use the C<Maybe> type constraint instead, your values will also validate
+against C<undef>, which may be incorrect for you.
 
 =head1 EXPORTABLE SUBROUTINES
 
 This type library makes available for export the following subroutines
+
+=for stopwords slurpy
 
 =head2 slurpy
 
@@ -579,11 +583,11 @@ This will now work as expected, validating ArrayRef structures such as:
 A few caveats apply.  First, the slurpy type constraint must be the last one in
 the list of type constraint parameters.  Second, the parent type of the slurpy
 type constraint must match that of the containing type constraint.  That means
-that a Tuple can allow a slurpy ArrayRef (or children of ArrayRefs, including
-another Tuple) and a Dict can allow a slurpy HashRef (or children/subtypes of
-HashRef, also including other Dict constraints).
+that a C<Tuple> can allow a slurpy C<ArrayRef> (or children of C<ArrayRef>s, including
+another C<Tuple>) and a C<Dict> can allow a slurpy C<HashRef> (or children/subtypes of
+HashRef, also including other C<Dict> constraints).
 
-Please note the the technical way this works 'under the hood' is that the
+Please note the technical way this works 'under the hood' is that the
 slurpy keyword transforms the target type constraint into a coderef.  Please do
 not try to create your own custom coderefs; always use the slurpy method.  The
 underlying technology may change in the future but the slurpy keyword will be
@@ -614,9 +618,9 @@ be found also in the 't/examples.t' test.  Your contributions are also welcomed.
 =head2 Normalize a HashRef
 
 You need a hashref to conform to a canonical structure but are required accept a
-bunch of different incoming structures.  You can normalize using the Dict type
+bunch of different incoming structures.  You can normalize using the C<Dict> type
 constraint and coercions.  This example also shows structured types mixed which
-other MooseX::Types libraries.
+other L<MooseX::Types> libraries.
 
     package Test::MooseX::Meta::TypeConstraint::Structured::Examples::Normalize;
 
