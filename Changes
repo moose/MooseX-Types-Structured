@@ -1,5 +1,8 @@
 Revision history for MooseX-Types-Structured
 
+        - fixed use of an interface that was deprecated in Moose-2.1100
+          (ether)
+
 0.28   03 October 2011
         - Fixed regression where mixed type constraints (MX:Types style and
         'classic' Stringy style) are used in a single structured type doesn't
