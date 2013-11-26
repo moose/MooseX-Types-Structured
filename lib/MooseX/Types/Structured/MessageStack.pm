@@ -3,10 +3,6 @@ package ## Hide from PAUSE
 
 use Moose;
 
-=attr level
-
-=cut
-
 has 'level' => (
     traits => ['Counter'],
     is => 'ro',
@@ -18,10 +14,6 @@ has 'level' => (
         dec_level => 'dec',
     },
 );
-
-=attr messages
-
-=cut
 
 has 'messages' => (
     traits => ['Array'],
@@ -35,10 +27,6 @@ has 'messages' => (
         all_messages => 'elements',
     },
 );
-
-=method as_string
-
-=cut
 
 sub as_string {
     my @messages = (shift)->all_messages;
