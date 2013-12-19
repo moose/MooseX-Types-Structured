@@ -1,6 +1,5 @@
 package ## Hide from PAUSE
  MooseX::Meta::TypeCoercion::Structured;
-# ABSTRACT: Coerce structured type constraints
 
 use Moose;
 extends 'Moose::Meta::TypeCoercion';
