@@ -4,7 +4,7 @@ MooseX::Types::Structured - Structured Type Constraints for Moose
 
 # VERSION
 
-version 0.29
+version 0.30
 
 # SYNOPSIS
 
