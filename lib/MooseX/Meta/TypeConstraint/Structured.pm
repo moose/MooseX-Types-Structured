@@ -1,5 +1,6 @@
 package ## Hide from PAUSE
  MooseX::Meta::TypeConstraint::Structured;
+# ABSTRACT: Structured type constraints
 
 use Moose;
 use Devel::PartialDump;
