@@ -114,7 +114,11 @@ sub generate_constraint_for {
     return $self->constraint_generator->($self, $type_constraints);
 }
 
+=begin :prelude
+
 =for stopwords parameterize
+
+=end :prelude
 
 =method parameterize (@type_constraints)
 
