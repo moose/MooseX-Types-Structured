@@ -1,4 +1,6 @@
+/.ackrc
 /.build/
-!.gitignore
-/MooseX-Types-Structured-*
-git-daemon-export-ok
+!/.gitignore
+/.latest
+/MooseX-Types-Structured-*/
+/MooseX-Types-Structured-*.tar.gz
