@@ -3,7 +3,7 @@ package MooseX::Types::Structured;
 
 use 5.008;
 
-use Moose::Util::TypeConstraints 1.06;
+use Moose::Util::TypeConstraints 1.06 'find_type_constraint';
 use MooseX::Meta::TypeConstraint::Structured;
 use MooseX::Meta::TypeConstraint::Structured::Optional;
 use MooseX::Types::Structured::OverflowHandler;

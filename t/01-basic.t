@@ -4,7 +4,7 @@ use warnings;
 use Test::More tests=>12;
 
 use MooseX::Meta::TypeConstraint::Structured;
-use Moose::Util::TypeConstraints;
+use Moose::Util::TypeConstraints 'find_type_constraint';
 
 ok my $int = find_type_constraint('Int') => 'Got Int';
 ok my $str = find_type_constraint('Str') => 'Got Str';
