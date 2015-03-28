@@ -1,4 +1,6 @@
-Revision history for MooseX-Types-Structured
+Revision history for {{$dist->name}}
+
+{{$NEXT}}
 
 0.32    2015-03-28 21:39:38Z
         - fix namespace cleaning with older MooseX::Types
