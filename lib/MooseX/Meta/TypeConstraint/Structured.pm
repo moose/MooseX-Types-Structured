@@ -7,7 +7,6 @@ use Devel::PartialDump;
 use Moose::Util::TypeConstraints ();
 use MooseX::Meta::TypeCoercion::Structured;
 extends 'Moose::Meta::TypeConstraint';
-use namespace::autoclean;
 
 
 =head1 DESCRIPTION
@@ -357,4 +356,5 @@ L<Moose>, L<Moose::Meta::TypeConstraint>
 
 =cut
 
+no Moose;
 __PACKAGE__->meta->make_immutable(inline_constructor => 0);
