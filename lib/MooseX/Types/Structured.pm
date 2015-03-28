@@ -9,9 +9,14 @@ use MooseX::Meta::TypeConstraint::Structured::Optional;
 use MooseX::Types::Structured::OverflowHandler;
 use MooseX::Types::Structured::MessageStack;
 use MooseX::Types 0.22 -declare => [qw(Dict Map Tuple Optional)];
-use Sub::Exporter 0.982 -setup => [ qw(Dict Map Tuple Optional slurpy) ];
+use Sub::Exporter::ForMethods 'method_installer';
+use Sub::Exporter 0.982 -setup => {
+    installer => method_installer,
+    exports => [ qw(Dict Map Tuple Optional slurpy) ],
+};
 use Devel::PartialDump 0.13;
 use Scalar::Util qw(blessed);
+use namespace::autoclean -except => 'import'; # TODO: https://github.com/rjbs/Sub-Exporter/issues/8
 
 =head1 SYNOPSIS
 

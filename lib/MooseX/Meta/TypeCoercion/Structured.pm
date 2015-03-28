@@ -3,6 +3,7 @@ package ## Hide from PAUSE
 
 use Moose;
 extends 'Moose::Meta::TypeCoercion';
+use namespace::autoclean;
 
 # We need to make sure we can properly coerce the structure elements inside a
 # structured type constraint.  However requirements for the best way to allow

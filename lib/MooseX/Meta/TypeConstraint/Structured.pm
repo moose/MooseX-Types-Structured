@@ -7,6 +7,7 @@ use Devel::PartialDump;
 use Moose::Util::TypeConstraints ();
 use MooseX::Meta::TypeCoercion::Structured;
 extends 'Moose::Meta::TypeConstraint';
+use namespace::autoclean;
 
 
 =head1 DESCRIPTION
