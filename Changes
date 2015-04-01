@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+        - avoid using a method installer in the main importer, to avoid
+          removing subs' blessedness (RT#103247)
 
 0.32    2015-03-28 21:39:38Z
         - fix namespace cleaning with older MooseX::Types
