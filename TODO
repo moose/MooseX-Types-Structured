@@ -1,0 +1,9 @@
+
+"slurpy" is not supported by...
+http://www.cpantesters.org/cpan/report/af1ea6a0-a028-1014-88d0-c10f2b825c07
+perhaps a too-old version of Sub::Exporter::ForMethods?
+
+See also
+https://rt.cpan.org/Ticket/Display.html?id=103247
+https://github.com/rjbs/Sub-Exporter-ForMethods/issues/1
+
