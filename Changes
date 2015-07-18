@@ -1,6 +1,7 @@
 Revision history for MooseX-Types-Structured
 
 {{$NEXT}}
+        - bump namespace::clean prereq
 
 0.33    2015-04-01 17:10:23Z
         - avoid using a method installer in the main importer, to avoid

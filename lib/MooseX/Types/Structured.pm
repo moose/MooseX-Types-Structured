@@ -11,7 +11,7 @@ use MooseX::Types::Structured::OverflowHandler;
 use MooseX::Types::Structured::MessageStack;
 use Devel::PartialDump 0.13;
 use Scalar::Util qw(blessed);
-use namespace::clean 0.08;
+use namespace::clean 0.19;
 use MooseX::Types 0.22 -declare => [qw(Dict Map Tuple Optional)];
 use Sub::Exporter 0.982 -setup => {
     exports => [ qw(Dict Map Tuple Optional slurpy) ],
