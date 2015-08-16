@@ -1,7 +1,7 @@
 package MooseX::Types::Structured;
 # ABSTRACT: Structured Type Constraints for Moose
 
-our $VERSION = '0.34';
+our $VERSION = '0.35';
 
 use 5.008;
 use Moose::Util::TypeConstraints 1.06 'find_type_constraint';
