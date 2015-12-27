@@ -1,6 +1,7 @@
 Revision history for MooseX-Types-Structured
 
 {{$NEXT}}
+        - avoid spaces in slurpy type constraint names (ilmari, PR#1)
 
 0.34    2015-08-16 02:39:14Z
         - bump namespace::clean prereq
