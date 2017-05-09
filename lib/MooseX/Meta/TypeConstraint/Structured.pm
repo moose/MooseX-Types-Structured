@@ -2,7 +2,7 @@ package ## Hide from PAUSE
  MooseX::Meta::TypeConstraint::Structured;
 # ABSTRACT: Structured type constraints
 
-our $VERSION = '0.36';
+our $VERSION = '0.37';
 
 use Moose;
 use Devel::PartialDump;

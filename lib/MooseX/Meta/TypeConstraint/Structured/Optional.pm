@@ -1,7 +1,7 @@
 package ## Hide from PAUSE
   MooseX::Meta::TypeConstraint::Structured::Optional;
 
-our $VERSION = '0.36';
+our $VERSION = '0.37';
 
 use Moose;
 use MooseX::Meta::TypeCoercion::Structured::Optional;

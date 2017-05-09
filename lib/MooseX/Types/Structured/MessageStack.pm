@@ -1,7 +1,7 @@
 package ## Hide from PAUSE
   MooseX::Types::Structured::MessageStack;
 
-our $VERSION = '0.36';
+our $VERSION = '0.37';
 
 use Moose;
 
